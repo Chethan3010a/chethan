@@ -10,7 +10,7 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
             background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #a18cd1);
             background-size: 400% 400%;
@@ -47,7 +47,6 @@
             }
         }
 
-        /* Header */
         header {
             background-color: rgba(0, 0, 0, 0.6);
             color: white;
@@ -58,7 +57,6 @@
             z-index: 2;
         }
 
-        /* Navigation */
         nav {
             background-color: rgba(0, 0, 0, 0.6);
             overflow: hidden;
@@ -79,7 +77,6 @@
             color: black;
         }
 
-        /* Footer */
         footer {
             background-color: rgba(0, 0, 0, 0.6);
             color: white;
@@ -91,7 +88,6 @@
             z-index: 2;
         }
 
-        /* Gradient Animation */
         @keyframes gradientAnimation {
             0% {
                 background-position: 0% 50%;
@@ -104,12 +100,10 @@
             }
         }
 
-        /* Centered Icon (Gift Box) */
         .center-icon {
             position: absolute;
-            top: 60%; /* Move the icon slightly lower */
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
             font-size: 50px;
             color: white;
             cursor: pointer;
@@ -118,10 +112,9 @@
         }
 
         .center-icon:hover {
-            transform: translate(-50%, -50%) scale(1.2);
+            transform: translateX(-50%) scale(1.2);
         }
 
-        /* "I Love You" message */
         .message {
             position: absolute;
             top: 60%;
@@ -134,10 +127,12 @@
             font-weight: bold;
             z-index: 5;
             opacity: 0;
+        }
+
+        .fade-in {
             animation: fadeIn 2s forwards;
         }
 
-        /* Flower falling animation */
         @keyframes flowerFall {
             0% {
                 top: -10%;
@@ -153,12 +148,11 @@
             position: absolute;
             width: 40px;
             height: 40px;
-            background-image: url('https://image.shutterstock.com/image-vector/hand-drawn-floral-pattern-vector-illustration-260nw-1499049176.jpg');
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/3/3c/Red_rose_icon.svg');
             background-size: cover;
             animation: flowerFall 3s linear infinite;
         }
 
-        /* Fade-in Effect for "I Love You" message */
         @keyframes fadeIn {
             0% {
                 opacity: 0;
@@ -168,11 +162,64 @@
             }
         }
 
+        /* Gallery Section */
+        #imageGallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            padding: 20px;
+            margin-top: 20px;
+            z-index: 5;
+            position: relative;
+        }
+
+        #imageGallery img {
+            max-width: 150px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            header {
+                font-size: 1.8em;
+                padding: 0.8em 0;
+            }
+
+            nav a {
+                float: none;
+                display: block;
+                text-align: center;
+                padding: 12px;
+            }
+
+            footer {
+                font-size: 0.9em;
+                padding: 0.8em 0;
+            }
+
+            .center-icon {
+                font-size: 30px;
+            }
+
+            #imageGallery img {
+                max-width: 100px;
+            }
+        }
+
+        /* Specific icon positions */
+        #giftIcon {
+            top: 60%;
+        }
+
+        #uploadIcon {
+            top: 72%;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Glitter Effect Container -->
     <div class="glitter"></div>
 
     <header>
@@ -189,23 +236,32 @@
         <p>&copy; 2025 My Simple Webpage. All rights reserved.</p>
     </footer>
 
-    <!-- Center Icon (Gift Box) -->
-    <div class="center-icon" onclick="showMessage()">
-        <i class="fas fa-gift"></i> <!-- Gift Box Icon -->
+    <!-- Gift Icon -->
+    <div class="center-icon" id="giftIcon" onclick="showMessage()" aria-label="Click to show love message" role="button" tabindex="0">
+        <i class="fas fa-gift"></i>
     </div>
 
-    <!-- "I Love You" message -->
+    <!-- Upload Icon -->
+    <div class="center-icon" id="uploadIcon" onclick="triggerUpload()" aria-label="Upload photos" role="button" tabindex="0">
+        <i class="fas fa-image"></i>
+    </div>
+
+    <!-- Hidden File Input for Images -->
+    <input type="file" id="imageInput" accept="image/*" style="display: none;" multiple onchange="previewImages(event)">
+
+    <!-- Love Message -->
     <div class="message" id="loveMessage">
         <p>I Love You</p>
     </div>
 
-    <script>
-        // Generate glitter effects
-        const glitterContainer = document.querySelector('.glitter');
+    <!-- Image Gallery Section -->
+    <div id="imageGallery"></div>
 
-        // Create random glitter elements
+    <script>
+        // Glitter effect
+        const glitterContainer = document.querySelector('.glitter');
         function createGlitter() {
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 50; i++) {
                 let glitter = document.createElement('span');
                 glitter.style.left = Math.random() * 100 + 'vw';
                 glitter.style.animationDuration = Math.random() * 3 + 2 + 's';
@@ -213,32 +269,52 @@
                 glitterContainer.appendChild(glitter);
             }
         }
-
-        // Call the function to generate glitter
         createGlitter();
 
-        // Function to show the "I Love You" message when the icon is clicked
+        // Show love message
         function showMessage() {
             const message = document.getElementById('loveMessage');
-            message.style.display = 'block'; // Show the message
-
-            // Trigger flower animations
+            message.style.display = 'block';
+            message.classList.add('fade-in');
             triggerFlowers();
         }
 
-        // Trigger falling flowers animation
+        // Falling flowers animation
         function triggerFlowers() {
             for (let i = 0; i < 10; i++) {
                 let flower = document.createElement('div');
                 flower.classList.add('flower');
-                flower.style.left = Math.random() * 100 + 'vw'; // Random position
-                flower.style.animationDuration = Math.random() * 5 + 3 + 's'; // Random animation time
+                flower.style.left = Math.random() * 100 + 'vw';
+                flower.style.animationDuration = Math.random() * 5 + 3 + 's';
                 document.body.appendChild(flower);
-
-                // Remove flower after animation
                 flower.addEventListener('animationend', () => {
                     flower.remove();
                 });
+            }
+        }
+
+        // Trigger image upload input
+        function triggerUpload() {
+            document.getElementById('imageInput').click();
+        }
+
+        // Preview multiple images
+        function previewImages(event) {
+            const files = event.target.files;
+            const gallery = document.getElementById('imageGallery');
+            gallery.innerHTML = ""; // Clear previous images
+
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    gallery.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
             }
         }
     </script>
